@@ -1,0 +1,22 @@
+@using ProcessTrackerWeb.Models.FolderChange
+@model List<FolderChangeViewModel>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Path</th>
+        <th>Change Type</th>
+        <th>Change Date</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var change in Model)
+    {
+        <tr>
+            <td>@change.Path</td>
+            <td>@change.ChangeType</td>
+            <td>@change.ChangeDate</td>
+        </tr>
+    }
+    </tbody>
+</table>

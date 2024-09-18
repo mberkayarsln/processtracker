@@ -1,0 +1,25 @@
+@model List<ProcessViewModel>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Process Name</th>
+        <th>Folder to Apply</th>
+        <th>Run Date</th>
+        <th>Operation</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var process in Model)
+    {
+        <tr>
+            <td>@process.ProcessName</td>
+            <td>@process.FolderToApply</td>
+            <td>@process.RunDate</td>
+            <td>
+                <a class="btn btn-success" asp-action="RunProcess" asp-controller="Process" asp-route-id="@process.Id">Run Process &#9658;</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

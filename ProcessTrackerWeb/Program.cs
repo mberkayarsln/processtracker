@@ -24,6 +24,8 @@ builder.Services.AddTransient<FolderChangeService>(sp =>
     return new FolderChangeService(pathToWatch, serviceScopeFactory);
 });
 
+builder.Services.AddTransient<ProcessService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
