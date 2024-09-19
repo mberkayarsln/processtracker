@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using ProcessTrackerWeb.Data;
 using ProcessTrackerWeb.Models.FolderChange;
@@ -10,11 +11,13 @@ public class FolderChangeService
 {
     private readonly FileSystemWatcher _watcher;
     private readonly IServiceScopeFactory _serviceScopeFactory;
+    private readonly ProcessService _service;
 
-    public FolderChangeService(string pathToWatch, IServiceScopeFactory serviceScopeFactory)
+    public FolderChangeService(string pathToWatch, IServiceScopeFactory serviceScopeFactory, ProcessService service)
     {
         _serviceScopeFactory = serviceScopeFactory;
         _watcher = new FileSystemWatcher(pathToWatch);
+        _service = service;
         //_watcher.Changed += OnChanged;
         _watcher.Created += OnChange;
         _watcher.Deleted += OnChange;
@@ -42,10 +45,15 @@ public class FolderChangeService
             ChangeType = changeType,
             FileName = fullPath.Split("/")[^1],
             FolderName = fullPath.Split("/")[^2],
-            FolderPath = fullPath.Substring(0, fullPath.LastIndexOf("/",StringComparison.Ordinal))
+            FolderPath = fullPath.Substring(0, fullPath.LastIndexOf("/", StringComparison.Ordinal))
         };
 
         context.FolderChanges.Add(folderChange);
         context.SaveChanges();
+
+        var processList = context.Processes.Where(p => p.FolderToApply == folderChange.FolderPath).ToList();
+        if (!processList.Any())
+            return;
+        _service.RunProcessAutomatically(processList);
     }
 }

@@ -1,7 +1,10 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using ProcessTrackerWeb.Data;
+using ProcessTrackerWeb.Models;
 
 namespace ProcessTrackerWeb.Services;
 
@@ -14,11 +17,12 @@ public class ProcessService
         _serviceScopeFactory = serviceScopeFactory;
     }
 
-    public string RunProcess(int id)
+    public void RunProcessManually(int id)
     {
         if (id == 0)
         {
-            return "Invalid id";
+            Console.WriteLine("Invalid Id");
+            return;
         }
 
         var context = _serviceScopeFactory.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -27,9 +31,18 @@ public class ProcessService
 
         if (process == null)
         {
-            return "Process does not exist";
+            Console.WriteLine("Process does not exist");
+            return;
         }
 
-        return $"Process {process.ProcessName} ran successfully";
+        Console.WriteLine($"Process {process.ProcessName} ran manually");
+    }
+
+    public void RunProcessAutomatically(List<Process> processList)
+    {
+        foreach (var process in processList)
+        {
+            Console.WriteLine(process.ProcessName + " ran automatically");
+        }
     }
 }

@@ -11,10 +11,15 @@
         <input disabled type="text" class="form-control" value="/Users/arslan/Desktop/Folder" asp-for="FolderToApply">
         <span asp-validation-for="FolderToApply" class="text-danger"></span>
     </div>
-    <div class="mb-3">
+    @*<div class="mb-3">
         <label class="form-label" asp-for="RunDate">Run Date:</label>
         <input type="date" class="form-control" asp-for="RunDate">
         <span asp-validation-for="RunDate" class="text-danger"></span>
+    </div>*@
+    <div class="mb-3">
+        <label class="form-label" asp-for="RunHour">Hour: </label>
+        <input type="time" class="form-control" asp-for="RunHour">
+        <span asp-validation-for="RunHour" class="text-danger"></span>
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>

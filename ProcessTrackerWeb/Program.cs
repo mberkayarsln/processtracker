@@ -20,8 +20,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddTransient<FolderChangeService>(sp =>
 {
     var serviceScopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
+    var processService = sp.GetRequiredService<ProcessService>();
     string pathToWatch = "/Users/arslan/Desktop/Folder";
-    return new FolderChangeService(pathToWatch, serviceScopeFactory);
+    return new FolderChangeService(pathToWatch, serviceScopeFactory,processService);
 });
 
 builder.Services.AddTransient<ProcessService>();

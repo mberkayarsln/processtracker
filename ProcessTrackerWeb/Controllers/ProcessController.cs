@@ -25,7 +25,7 @@ public class ProcessController : Controller
             Id = p.Id,
             ProcessName = p.ProcessName,
             FolderToApply = p.FolderToApply,
-            RunDate = p.RunDate
+            RunHour = p.RunHour
         }).ToList();
 
         return View(processList);
@@ -49,7 +49,7 @@ public class ProcessController : Controller
         {
             ProcessName = viewModel.ProcessName,
             FolderToApply = viewModel.FolderToApply,
-            RunDate = viewModel.RunDate
+            RunHour = viewModel.RunHour
         };
 
         _context.Processes.Add(process);
@@ -58,10 +58,9 @@ public class ProcessController : Controller
         return RedirectToAction("ListProcess");
     }
 
-    public JsonResult RunProcess(int id)
+    public IActionResult RunProcessManually(int id)
     {
-        var result = _service.RunProcess(id);
-
-        return Json(new { message = result });
+        _service.RunProcessManually(id);
+        return RedirectToAction("ListProcess");
     }
 }
