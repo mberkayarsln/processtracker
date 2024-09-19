@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc;
+using System.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using ProcessTrackerWeb.Data;
 using ProcessTrackerWeb.Models;
@@ -11,10 +11,19 @@ namespace ProcessTrackerWeb.Services;
 public class ProcessService
 {
     private readonly IServiceScopeFactory _serviceScopeFactory;
+    private Timer _timer;
 
     public ProcessService(IServiceScopeFactory serviceScopeFactory)
     {
         _serviceScopeFactory = serviceScopeFactory;
+        
+        int delayToNextMinute = (60 - DateTime.Now.Second) * 1000;
+        _timer = new Timer(RunProcessPeriodically, null, delayToNextMinute, 60000);
+    }
+
+    private void RunProcess(string processName, string runType)
+    {
+        Console.WriteLine(processName + " ran successfully - " + runType);
     }
 
     public void RunProcessManually(int id)
@@ -35,14 +44,29 @@ public class ProcessService
             return;
         }
 
-        Console.WriteLine($"Process {process.ProcessName} ran manually");
+        RunProcess(process.ProcessName, "Manual");
     }
 
     public void RunProcessAutomatically(List<Process> processList)
     {
         foreach (var process in processList)
         {
-            Console.WriteLine(process.ProcessName + " ran automatically");
+            RunProcess(process.ProcessName, "Automatic");
+        }
+    }
+
+    private void RunProcessPeriodically(object? state)
+    {
+        Console.WriteLine("WORKED");
+        var context = _serviceScopeFactory.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var processList = context.Processes.ToList();
+
+        foreach (var process in processList)
+        {
+            if (process.RunHour == DateTime.Now.ToString("HH:mm"))
+            {
+                RunProcess(process.ProcessName, "Periodic");
+            }
         }
     }
 }
