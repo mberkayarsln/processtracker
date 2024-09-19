@@ -13,15 +13,17 @@ public class FolderChangeController : Controller
     {
         _context = context;
     }
+
     public IActionResult ListChange()
     {
-        var changeList = _context.FolderChanges.Select(f => new FolderChangeViewModel
-        {
-            ChangeDate = f.ChangeDate,
-            ChangeType = f.ChangeType,
-            Path = f.FolderPath + "/" + f.FileName
-        }).ToList();
-        
+        var changeList = _context.FolderChanges.Where(c => c.FolderPath == HttpContext.Session.GetString("folderPath"))
+            .Select(f => new FolderChangeViewModel
+            {
+                ChangeDate = f.ChangeDate,
+                ChangeType = f.ChangeType,
+                Path = f.FolderPath + "/" + f.FileName
+            }).ToList();
+
         return View(changeList);
     }
 }

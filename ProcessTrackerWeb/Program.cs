@@ -12,6 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -21,11 +23,12 @@ builder.Services.AddTransient<FolderChangeService>(sp =>
 {
     var serviceScopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
     var processService = sp.GetRequiredService<ProcessService>();
-    string pathToWatch = "/Users/arslan/Desktop/Folder";
-    return new FolderChangeService(pathToWatch, serviceScopeFactory,processService);
+    return new FolderChangeService(serviceScopeFactory,processService);
 });
 
 builder.Services.AddTransient<ProcessService>();
+
+builder.Services.AddSession();
 
 var app = builder.Build();
 
@@ -41,6 +44,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseSession(); 
 
 app.UseAuthorization();
 

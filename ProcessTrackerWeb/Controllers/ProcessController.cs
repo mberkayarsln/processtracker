@@ -20,7 +20,7 @@ public class ProcessController : Controller
 
     public IActionResult ListProcess()
     {
-        var processList = _context.Processes.Select(p => new ProcessViewModel
+        var processList = _context.Processes.Where(p=>p.FolderToApply==HttpContext.Session.GetString("folderPath")).Select(p => new ProcessViewModel
         {
             Id = p.Id,
             ProcessName = p.ProcessName,
@@ -33,7 +33,8 @@ public class ProcessController : Controller
 
     public IActionResult AddProcess()
     {
-        return View();
+        var viewModel = new ProcessViewModel { FolderToApply = HttpContext.Session.GetString("folderPath") };
+        return View(viewModel);
     }
 
     [HttpPost]
@@ -48,7 +49,7 @@ public class ProcessController : Controller
         var process = new Process
         {
             ProcessName = viewModel.ProcessName,
-            FolderToApply = viewModel.FolderToApply,
+            FolderToApply = HttpContext.Session.GetString("folderPath"),
             RunHour = viewModel.RunHour
         };
 

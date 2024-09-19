@@ -8,14 +8,9 @@
     </div>
     <div class="mb-3">
         <label class="form-label" asp-for="FolderToApply">Folder path to apply:</label>
-        <input disabled type="text" class="form-control" value="/Users/arslan/Desktop/Folder" asp-for="FolderToApply">
+        <input disabled type="text" class="form-control" asp-for="FolderToApply">
         <span asp-validation-for="FolderToApply" class="text-danger"></span>
     </div>
-    @*<div class="mb-3">
-        <label class="form-label" asp-for="RunDate">Run Date:</label>
-        <input type="date" class="form-control" asp-for="RunDate">
-        <span asp-validation-for="RunDate" class="text-danger"></span>
-    </div>*@
     <div class="mb-3">
         <label class="form-label" asp-for="RunHour">Hour: </label>
         <input type="time" class="form-control" asp-for="RunHour">

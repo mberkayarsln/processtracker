@@ -10,9 +10,8 @@ public class ProcessViewModel
     [Required(ErrorMessage = "Process name is required")]
     public string ProcessName { get; set; }
 
-    [Required(ErrorMessage = "Folder is required")]
-    public string FolderToApply { get; set; } = "/Users/arslan/Desktop/Folder";
+    public string? FolderToApply { get; set; }
 
     [Required(ErrorMessage = "Run hour is required")]
-    public string RunHour { get; set; }
+    public string RunHour { get; set; } = DateTime.Now.ToString("HH:mm");
 }

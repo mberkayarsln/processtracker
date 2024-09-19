@@ -9,16 +9,19 @@ namespace ProcessTrackerWeb.Services;
 
 public class FolderChangeService
 {
-    private readonly FileSystemWatcher _watcher;
+    private FileSystemWatcher _watcher;
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly ProcessService _service;
 
-    public FolderChangeService(string pathToWatch, IServiceScopeFactory serviceScopeFactory, ProcessService service)
+    public FolderChangeService(IServiceScopeFactory serviceScopeFactory, ProcessService service)
     {
         _serviceScopeFactory = serviceScopeFactory;
-        _watcher = new FileSystemWatcher(pathToWatch);
         _service = service;
-        //_watcher.Changed += OnChanged;
+    }
+
+    public void StartWatching(string pathToWatch)
+    {
+        _watcher = new FileSystemWatcher(pathToWatch);
         _watcher.Created += OnChange;
         _watcher.Deleted += OnChange;
         _watcher.Renamed += OnRename;
